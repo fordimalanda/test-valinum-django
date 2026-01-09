@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>ValiNum RDC + Django</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 350px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; outline: none; }
+        .info { font-size: 14px; margin-top: 10px; min-height: 40px; }
+        .btn { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2 style="text-align: center;">Vérification RDC 🇨🇩</h2>
+    <input type="text" id="phoneInput" placeholder="Ex: 0812345678">
+    
+    <div id="result" class="info"></div>
+    
+    <button id="submitBtn" class="btn" disabled>Valider le numéro</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/fomadev/valinum@v1.0.0/dist/valinum.js"></script>
+
+<script>
+    const input = document.getElementById('phoneInput');
+    const resultDiv = document.getElementById('result');
+    const btn = document.getElementById('submitBtn');
+
+    input.addEventListener('input', (e) => {
+        const data = ValiNum.validateDRC(e.target.value);
+        
+        if (e.target.value.length > 0) {
+            resultDiv.innerHTML = `<b>Opérateur:</b> ${data.operator || 'Inconnu'}<br>` +
+                                 `<span style="color: ${data.isValid ? 'green' : 'red'}">${data.isValid ? '✅ Numéro valide' : '❌ ' + data.error}</span>`;
+            btn.disabled = !data.isValid;
+            input.style.borderColor = data.isValid ? 'green' : '#ddd';
+        } else {
+            resultDiv.innerHTML = "";
+            btn.disabled = true;
+            input.style.borderColor = '#ddd';
+        }
+    });
+</script>
+
+</body>
+</html>
